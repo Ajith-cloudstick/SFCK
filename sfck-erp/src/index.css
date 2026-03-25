@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary — Teal */
+  --color-primary-900: #1a5c42;
+  --color-primary-800: #257a58;
+  --color-primary-700: #2d8a64;
+  --color-primary-600: #36986F;
+  --color-primary-500: #45a87e;
+  --color-primary-400: #5bb892;
+  --color-primary-200: #a8dcc4;
+  --color-primary-100: #d4f0e2;
+  --color-primary-50:  #edf8f2;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Base resets */
+body {
+  @apply font-sans text-sm text-gray-800 bg-gray-100 antialiased;
+}
+a { @apply no-underline text-inherit; }
+button { @apply cursor-pointer font-sans border-none bg-transparent leading-none; }
+input, select, textarea {
+  @apply font-sans text-[13px] outline-none border border-gray-200 rounded-md px-3 py-2 text-gray-800 bg-white transition-all duration-150;
+}
+input:focus, select:focus, textarea:focus {
+  @apply border-primary-400 ring-2 ring-primary-50;
+}
