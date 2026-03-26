@@ -82,7 +82,13 @@ const generateEmployees = (): Employee[] => {
         joiningDate: `${year}-${month}-${day}`,
         yearsExperience,
         experienceWeightage: experienceWeightage as 'A' | 'B' | 'C',
-        advance: randomChoice([0, 0, 0, 500, 1000, 2000, 5000])
+        advance: randomChoice([0, 0, 0, 500, 1000, 2000, 5000]),
+        leaveStats: {
+          annualEarned: randomInt(15, 25),
+          annualSick: 14,
+          usedEarned: randomInt(0, 10),
+          usedSick: randomInt(0, 7)
+        }
       });
     }
   });

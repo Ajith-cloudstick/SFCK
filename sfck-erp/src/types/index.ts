@@ -21,6 +21,12 @@ export type Employee = {
   yearsExperience: number;
   experienceWeightage: 'A' | 'B' | 'C'; // A: 0-5yr, B: 5-10yr, C: 10+yr
   advance: number;
+  leaveStats?: {
+    annualEarned: number;
+    annualSick: number; // max 14 per year
+    usedEarned: number;
+    usedSick: number;
+  };
 }
 
 // ─── Attendance ─────────────────────────────────────────────────────
