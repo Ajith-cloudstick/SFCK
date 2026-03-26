@@ -2,10 +2,10 @@ import type { EstateId, TapperClass } from '../types';
 
 // ─── Estates ────────────────────────────────────────────────────────
 export const ESTATES = [
+  { id: 1 as EstateId, name: 'Kumaramkudy', code: 'KMD', area: '380 ha', idRange: [3501, 3800] as [number, number] },
+  { id: 2 as EstateId, name: 'Mullumala', code: 'MUL', area: '510 ha', idRange: [3801, 4100] as [number, number] },
+  { id: 3 as EstateId, name: 'Chithalvetty', code: 'THK', area: '460 ha', idRange: [4101, 4400] as [number, number] },
   { id: 0 as EstateId, name: 'Cherumppittakavu', code: 'CHR', area: '420 ha', idRange: [3201, 3500] as [number, number] },
-  { id: 1 as EstateId, name: 'Kumaramkudy',      code: 'KMD', area: '380 ha', idRange: [3501, 3800] as [number, number] },
-  { id: 2 as EstateId, name: 'Mullumala',         code: 'MUL', area: '510 ha', idRange: [3801, 4100] as [number, number] },
-  { id: 3 as EstateId, name: 'Thekedath',         code: 'THK', area: '460 ha', idRange: [4101, 4400] as [number, number] },
 ];
 
 // ─── Collection Centers (12+ per estate) ────────────────────────────

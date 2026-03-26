@@ -13,7 +13,7 @@ export const Production = () => {
   const { employees, production, selectedEstate, selectedDate, selectedMonth, setSelectedDate } = useERPStore();
 
   const dailyData = useMemo(() => {
-    return production.filter(p => p.date === selectedDate && (selectedEstate === 'all' || p.estate === selectedEstate)).map(r => {
+    return production.filter(p => p.date === selectedDate && (selectedEstate === null || p.estate === selectedEstate)).map(r => {
       const e = employees.find(em => em.id === r.empId);
       return { id: r.empId, name: e ? e.name : '-', block: r.workItemId, latex: r.latexWeight.toFixed(2), drcPct: r.drcPercent.toFixed(1) + '%', drcKg: r.drcKg.toFixed(2), scraps: r.scrapsKg.toFixed(2), target: DAILY_TARGET_KG, incentive: r.incentiveAmount };
     });
@@ -28,7 +28,7 @@ export const Production = () => {
 
   const monthlyData = useMemo(() => {
     if (activeTab !== 'Monthly Summary') return [];
-    return employees.filter(e => e.designation === 'Tapper' && (selectedEstate === 'all' || e.estate === selectedEstate)).map(emp => {
+    return employees.filter(e => e.designation === 'Tapper' && (selectedEstate === null || e.estate === selectedEstate)).map(emp => {
       const mProd = production.filter(p => p.empId === emp.id && p.date.startsWith(selectedMonth));
       return { id: emp.id, name: emp.name, days: mProd.length, tLatex: mProd.reduce((s, p) => s + p.latexWeight, 0).toFixed(2), tDrc: mProd.reduce((s, p) => s + p.drcKg, 0).toFixed(2), tScraps: mProd.reduce((s, p) => s + p.scrapsKg, 0).toFixed(2), incDays: mProd.filter(p => p.incentiveAmount > 0).length, tInc: mProd.reduce((s, p) => s + p.incentiveAmount, 0) };
     }).filter(d => d.days > 0);
@@ -43,7 +43,7 @@ export const Production = () => {
 
   const columnsDaily = [
     { header: 'ID', accessorKey: 'id' }, { header: 'Name', accessorKey: 'name' }, { header: 'Block', accessorKey: 'block' }, { header: 'Latex (kg)', accessorKey: 'latex' }, { header: 'DRC %', accessorKey: 'drcPct' },
-    { header: 'DRC (kg)', accessorKey: 'drcKg', cell: (i:any) => { const val = parseFloat(i.getValue()); return <span className={`inline-block px-1.5 py-0.5 rounded ${val > DAILY_TARGET_KG ? 'bg-green-50 text-green-700 font-semibold' : ''}`}>{i.getValue()}</span>; }},
+    { header: 'DRC (kg)', accessorKey: 'drcKg', cell: (i: any) => { const val = parseFloat(i.getValue()); return <span className={`inline-block px-1.5 py-0.5 rounded ${val > DAILY_TARGET_KG ? 'bg-green-50 text-green-700 font-semibold' : ''}`}>{i.getValue()}</span>; } },
     { header: 'Scraps (kg)', accessorKey: 'scraps' }, { header: 'Target', accessorKey: 'target' }, { header: 'Incentive (₹)', accessorKey: 'incentive' }
   ];
 
@@ -55,13 +55,13 @@ export const Production = () => {
 
   const columnsComp = [
     { header: 'Estate', accessorKey: 'estate' },
-    { header: 'Total DRC (kg)', accessorKey: 'drc', cell: (i:any) => i.getValue().toFixed(2) },
+    { header: 'Total DRC (kg)', accessorKey: 'drc', cell: (i: any) => i.getValue().toFixed(2) },
     { header: '% Share', accessorKey: 'pct' }
   ];
 
   return (
     <div>
-      <PageHeader title="Production Records" actions={<ExportButton onPDF={() => {}} onExcel={() => {}} />} />
+      <PageHeader title="Production kkkRecords" actions={<ExportButton onPDF={() => { }} onExcel={() => { }} />} />
       <div className="px-7 pb-7">
         <TabBar tabs={['Daily Records', 'Monthly Summary', 'Estate Comparison']} active={activeTab} onChange={setActiveTab} />
         {activeTab === 'Daily Records' && (
@@ -86,7 +86,7 @@ export const Production = () => {
                     <XAxis dataKey="estate" fontSize={12} />
                     <YAxis fontSize={12} />
                     <Tooltip contentStyle={{ fontSize: '12px', borderRadius: '8px' }} />
-                    <Bar dataKey="drc" fill="#36986F" radius={[4,4,0,0]} />
+                    <Bar dataKey="drc" fill="#36986F" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

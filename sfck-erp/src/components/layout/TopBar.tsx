@@ -51,8 +51,8 @@ export const TopBar: React.FC = () => {
 
       {/* Right: Controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <input 
-          type="month" 
+        <input
+          type="month"
           value={selectedMonth}
           onChange={e => setSelectedMonth(e.target.value)}
           style={{

@@ -47,12 +47,10 @@ export const OrgProduction = () => {
     <div className="min-h-screen bg-gray-50/50">
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1400px] mx-auto px-8 py-6 flex items-center gap-4">
-          <button onClick={() => navigate('/head-office')} className="text-gray-400 hover:text-primary-600 p-1 cursor-pointer">
-            <ArrowLeft size={20} />
-          </button>
+
           <div className="flex-1">
             <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <TrendingUp size={20} className="text-green-600" /> Production Overview
+              Production Overview
             </h1>
             <p className="text-xs text-gray-400 mt-0.5">Period: {selectedMonth}</p>
           </div>

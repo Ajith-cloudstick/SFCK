@@ -26,7 +26,7 @@ export const Stock = () => {
 
   const dailyInflow = useMemo(() => {
     if (activeTab !== 'Daily Inflow') return [];
-    return stock.filter(s => s.date === selectedDate && (selectedEstate === 'all' || s.estate === selectedEstate)).map(s => ({
+    return stock.filter(s => s.date === selectedDate && (selectedEstate === null || s.estate === selectedEstate)).map(s => ({
       date: s.date, estate: ESTATES.find(e => e.id === s.estate)?.name || '', raw: s.rawLatexKg.toFixed(2), drc: s.drcKg.toFixed(2), scraps: s.scrapsKg.toFixed(2)
     }));
   }, [activeTab, stock, selectedDate, selectedEstate]);
@@ -43,7 +43,7 @@ export const Stock = () => {
 
   const chemicalsData = useMemo(() => {
     if (activeTab !== 'Chemicals') return [];
-    return stock.filter(s => s.date === selectedDate && (selectedEstate === 'all' || s.estate === selectedEstate))
+    return stock.filter(s => s.date === selectedDate && (selectedEstate === null || s.estate === selectedEstate))
       .flatMap(s => s.chemicalsUsed.map(c => ({ date: s.date, estate: ESTATES.find(e => e.id === s.estate)?.name || '', name: c.name, qty: c.qty.toFixed(2), unit: c.unit })));
   }, [activeTab, stock, selectedDate, selectedEstate]);
 
@@ -51,7 +51,7 @@ export const Stock = () => {
 
   return (
     <div>
-      <PageHeader title="Stock Management" actions={<ExportButton onPDF={() => {}} onExcel={() => {}} />} />
+      <PageHeader title="Stock Management" actions={<ExportButton onPDF={() => { }} onExcel={() => { }} />} />
       <div className="px-7 pb-7">
         <TabBar tabs={['Current Stock', 'Daily Inflow', 'Chemicals']} active={activeTab} onChange={setActiveTab} />
         {activeTab === 'Current Stock' && (

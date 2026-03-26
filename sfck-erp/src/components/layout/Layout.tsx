@@ -1,20 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Sidebar } from './Sidebar';
-import { useERPStore } from '../../store/useERPStore';
-import { useNavigate } from 'react-router-dom';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const selectedEstate = useERPStore(s => s.selectedEstate);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (selectedEstate === null) {
-      navigate('/');
-    }
-  }, [selectedEstate, navigate]);
-
-  if (selectedEstate === null) return null;
-
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />

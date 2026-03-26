@@ -1,11 +1,11 @@
 import { subDays, format, getDay } from 'date-fns';
-import { 
+import {
   ESTATES, COLLECTION_CENTERS, RUBBER_VARIETIES, DIVISIONS,
-  PIECE_RATE_PER_KG, DAILY_TARGET_KG, PF_RATE, ESI_RATE,
+  DAILY_TARGET_KG,
   TAPPER_CLASSES, LCC_RATES, LCC_MINIMUM_KG
 } from './constants';
-import type { 
-  Employee, AttendanceRecord, ProductionRecord, StockRecord, 
+import type {
+  Employee, AttendanceRecord, ProductionRecord, StockRecord,
   WageRecord, WorkAssignment, EstateId, WorkerCategory, TapperClass
 } from '../types';
 
@@ -20,11 +20,11 @@ function randomFloat(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
 
-const FIRST_NAMES = ['Rajan','Suresh','Gopi','Balan','Vijayan','Mohan','Soman',
-  'Pradeep','Anilkumar','Shyam','Babu','Santhosh','Rajesh','Vinod',
-  'Manoj','Krishnan','Thomas','Jose','Xavier','Saji','Binoy','Anto',
-  'Reji','Shibu','Lijo','Dijo','Tijo','Sijo','Bijo','Joji'];
-const LAST_NAMES = ['Nair','Pillai','Menon','Das','Kumar','P.','K.','M.','R.','T.'];
+const FIRST_NAMES = ['Rajan', 'Suresh', 'Gopi', 'Balan', 'Vijayan', 'Mohan', 'Soman',
+  'Pradeep', 'Anilkumar', 'Shyam', 'Babu', 'Santhosh', 'Rajesh', 'Vinod',
+  'Manoj', 'Krishnan', 'Thomas', 'Jose', 'Xavier', 'Saji', 'Binoy', 'Anto',
+  'Reji', 'Shibu', 'Lijo', 'Dijo', 'Tijo', 'Sijo', 'Bijo', 'Joji'];
+const LAST_NAMES = ['Nair', 'Pillai', 'Menon', 'Das', 'Kumar', 'P.', 'K.', 'M.', 'R.', 'T.'];
 
 // ─── Employees ──────────────────────────────────────────────────────
 const generateEmployees = (): Employee[] => {
@@ -42,7 +42,7 @@ const generateEmployees = (): Employee[] => {
       else if (rand > 0.93) designation = 'Field Supervisor';
       else if (rand > 0.90) designation = 'Tapping Supervisor';
       else if (rand > 0.78) designation = 'General Worker';
-      
+
       // Worker category
       if (designation === 'Tapper') {
         const catRand = Math.random();
@@ -60,7 +60,7 @@ const generateEmployees = (): Employee[] => {
 
       const cc = randomChoice(estateCCs);
       const tapperClass = designation === 'Tapper' ? randomChoice([1, 2, 3]) as TapperClass : undefined;
-      
+
       // Permanent tappers get fixed blocks
       const assignedBlocks = (designation === 'Tapper' && category === 'permanent')
         ? Array.from({ length: randomInt(2, 4) }, () => randomInt(1, 64))
@@ -103,7 +103,7 @@ const generateAttendance = (employees: Employee[], dates: Date[]): AttendanceRec
 
       const isTapper = emp.designation === 'Tapper' || emp.designation === 'Tapping Supervisor';
       const baseTime = isTapper ? '05:30' : '08:00';
-      const checkInTime = status === 'late' 
+      const checkInTime = status === 'late'
         ? (isTapper ? `06:${randomInt(16, 45)}` : `08:${randomInt(31, 59)}`)
         : baseTime;
 
@@ -123,21 +123,21 @@ const generateAttendance = (employees: Employee[], dates: Date[]): AttendanceRec
 
 // ─── Production ─────────────────────────────────────────────────────
 const generateProduction = (
-  employees: Employee[], 
+  employees: Employee[],
   attendance: AttendanceRecord[]
 ): ProductionRecord[] => {
   const records: ProductionRecord[] = [];
   const tappers = employees.filter(e => e.designation === 'Tapper');
-  
+
   tappers.forEach(tapper => {
     const tapperAtt = attendance.filter(a => a.empId === tapper.id && a.status !== 'absent');
     const estateCCs = COLLECTION_CENTERS.filter(cc => cc.estateId === tapper.estate);
     const estateDivisions = DIVISIONS.filter(d => d.estateId === tapper.estate);
-    
+
     tapperAtt.forEach(att => {
       const cc = tapper.ccId ? estateCCs.find(c => c.id === tapper.ccId) || randomChoice(estateCCs) : randomChoice(estateCCs);
       const division = estateDivisions.length > 0 ? randomChoice(estateDivisions) : undefined;
-      
+
       const latexWeight = randomFloat(15, 35);
       const metrolacDrc = randomFloat(30, 38);
       const drcPercent = randomFloat(32, 36);
@@ -145,7 +145,7 @@ const generateProduction = (
       const scrapsKg = randomFloat(2, 5);
       const scrapDryKg = scrapsKg * 0.5;
       const totalDryKg = drcKg + scrapDryKg;
-      
+
       const incentiveKg = Math.max(0, drcKg - DAILY_TARGET_KG);
       const tapperClassInfo = TAPPER_CLASSES.find(tc => tc.class === tapper.tapperClass);
       const incentiveRate = tapperClassInfo?.incentiveRate || 2;
@@ -161,7 +161,7 @@ const generateProduction = (
       const blockNo = tapper.assignedBlocks && tapper.assignedBlocks.length > 0
         ? randomChoice(tapper.assignedBlocks)
         : randomInt(1, 64);
-      
+
       records.push({
         id: `P-${att.date}-${tapper.id}`,
         date: att.date,
@@ -218,8 +218,7 @@ const generateStock = (production: ProductionRecord[], dates: Date[]): StockReco
 
 // ─── Wages ──────────────────────────────────────────────────────────
 const generateWages = (
-  employees: Employee[], 
-  production: ProductionRecord[], 
+  employees: Employee[],
   attendance: AttendanceRecord[]
 ): WageRecord[] => {
   const records: WageRecord[] = [];
@@ -230,37 +229,111 @@ const generateWages = (
   months.forEach(month => {
     employees.forEach(emp => {
       const empAtt = attendance.filter(a => a.empId === emp.id && a.date.startsWith(month) && a.status !== 'absent');
-      const empProd = production.filter(p => p.empId === emp.id && p.date.startsWith(month));
       if (empAtt.length === 0) return;
+
+      const grossWage = randomInt(18000, 25000);
+      const epf = Math.round(grossWage * 0.12);
+      const iwf = Math.round(grossWage * 0.0075);
+      const lic = randomChoice([0, 150, 300, 500]);
       
-      let totalDrcKg = 0, pieceRateAmount = 0, incentiveAmount = 0;
+      const allowances = randomInt(2000, 5000);
+      const bonusEarnings = grossWage - allowances;
       
-      if (emp.designation === 'Tapper') {
-        totalDrcKg = empProd.reduce((s, p) => s + p.drcKg, 0);
-        const tapperClassInfo = TAPPER_CLASSES.find(tc => tc.class === emp.tapperClass);
-        pieceRateAmount = totalDrcKg * (tapperClassInfo?.drcRate || PIECE_RATE_PER_KG);
-        incentiveAmount = empProd.reduce((s, p) => s + p.incentiveAmount, 0);
-      } else {
-        const dailyRate = emp.designation === 'Supervisor' || emp.designation === 'Estate Manager' || emp.designation === 'Assistant Manager' 
-          ? 600 
-          : emp.designation === 'Field Supervisor' || emp.designation === 'Tapping Supervisor' 
-            ? 550 
-            : 450;
-        pieceRateAmount = empAtt.length * dailyRate;
-      }
-      
-      const grossWage = pieceRateAmount + incentiveAmount;
-      const pfDeduction = grossWage * PF_RATE;
-      const esiDeduction = grossWage * ESI_RATE;
-      const advanceDeduction = Math.min(emp.advance, grossWage * 0.2);
-      const netWage = grossWage - pfDeduction - esiDeduction - advanceDeduction;
+      const totalDeduction = epf + iwf + lic + randomInt(500, 1500);
+      const netWage = grossWage - totalDeduction;
 
       records.push({
         id: `W-${month}-${emp.id}`,
         month, empId: emp.id, estate: emp.estate,
-        daysPresent: empAtt.length, totalDrcKg,
-        pieceRateAmount, incentiveAmount, grossWage,
-        pfDeduction, esiDeduction, advanceDeduction, netWage,
+        daysPresent: empAtt.length,
+        
+        // Line 1
+        basic: 429.43,
+        oldDa: 151.39,
+        newDa: 151.39,
+        oldGw: randomInt(10, 20),
+        newGw: randomInt(10, 20),
+        oldTd4: randomInt(0, 5),
+        oldTd2: randomInt(0, 5),
+        newTd4: randomInt(0, 5),
+        newTd2: randomInt(0, 5),
+        oldSd: randomInt(0, 2),
+        newSd: randomInt(0, 2),
+        holiday: randomInt(0, 4),
+        totalAttd: empAtt.length,
+
+        // Line 2
+        cls4: randomInt(10, 30),
+        cls2: randomInt(5, 15),
+        std4: 25,
+        std2: 12,
+        oldGwr: 429.43,
+        newGwr: 429.43,
+        cl4Rate: 15.5,
+        cl2Rate: 12.5,
+        scrapRate: 8.5,
+        totalDrcKg: randomFloat(15, 35),
+        pieceRateAmount: Math.round(grossWage * 0.7),
+        latex4: randomFloat(10, 20),
+        latex2: randomFloat(5, 10),
+        scrap4: randomFloat(1, 3),
+        scrap2: randomFloat(1, 2),
+        ldrc: randomFloat(10, 25),
+        sdrc: randomFloat(1, 5),
+
+        // Line 3
+        tdrc4: randomFloat(15, 30),
+        ldrc2: randomFloat(5, 15),
+        sdrc2: randomFloat(1, 3),
+        tdrc2: randomFloat(6, 18),
+        ldrc4Pct: 34.5,
+        ldrc2Pct: 34.0,
+        sdrc4Pct: 50.0,
+        sdrc2Pct: 50.0,
+        tov4: randomInt(0, 10),
+        tov2: randomInt(0, 5),
+        incentiveAmount: randomInt(500, 2000),
+        gwPay: randomInt(0, 500),
+        tpgPay: randomInt(0, 1000),
+        hlPay: 581,
+        sikPay: randomChoice([0, 1935, 5418]),
+        cutInc: randomChoice([0, 22]),
+        wAllo: 50,
+
+        // Line 4
+        ifa: randomInt(0, 50),
+        lcc: randomInt(50, 150),
+        sltr: 0,
+        extraTree: 0,
+        interimRelief: 0,
+        grossWage,
+        bonusEarnings,
+        epf,
+        lic,
+        iwf,
+        wageAdv: 0,
+        pTax: 0,
+        festAdv: randomChoice([0, 1200, 2500]),
+        exRec: 0,
+
+        // Line 5
+        trwLoan: randomChoice([0, 1500, 3000]),
+        trwSuerty: 0,
+        hba: 0,
+        medicalLoan: 0,
+        medAdv: 0,
+        penalty: randomChoice([0, 25, 50]),
+        banana: randomChoice([0, 10, 20]),
+        kseb: randomChoice([0, 150, 450]),
+        achankovil: 0,
+        gpais: 15,
+        amAdv: 0,
+        coconut: randomChoice([0, 180, 240]),
+        stamp: 1,
+        excessPaid: 0,
+
+        totalDeduction,
+        netWage,
       });
     });
   });
@@ -273,12 +346,12 @@ const generateAssignments = (employees: Employee[], dates: Date[]): WorkAssignme
   dates.forEach(date => {
     if (getDay(date) === 0) return;
     const dateStr = format(date, 'yyyy-MM-dd');
-    
+
     ESTATES.forEach(estate => {
       const estateTappers = employees.filter(e => e.estate === estate.id && e.designation === 'Tapper');
       const estateWorkers = employees.filter(e => e.estate === estate.id && e.designation === 'General Worker');
       const estateCCs = COLLECTION_CENTERS.filter(cc => cc.estateId === estate.id);
-      
+
       for (let i = 1; i <= 5; i++) {
         const blockTappers: number[] = [];
         const numTappers = Math.min(randomInt(3, 8), estateTappers.length);
@@ -330,12 +403,12 @@ export const generateAllData = () => {
   const employees = generateEmployees();
   const today = new Date();
   const dates = Array.from({ length: 30 }, (_, i) => subDays(today, i));
-  
+
   const attendance = generateAttendance(employees, dates);
   const production = generateProduction(employees, attendance);
   const stock = generateStock(production, dates);
-  const wages = generateWages(employees, production, attendance);
+  const wages = generateWages(employees, attendance);
   const assignments = generateAssignments(employees, dates);
-  
+
   return { employees, attendance, production, stock, wages, assignments };
 };

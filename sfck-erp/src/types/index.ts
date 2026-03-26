@@ -101,15 +101,95 @@ export type WageRecord = {
   empId: number;
   estate: EstateId;
   daysPresent: number;
+  
+  // Line 1: Basic Inputs
+  basic: number;
+  oldDa: number;
+  newDa: number;
+  oldGw: number;
+  newGw: number;
+  oldTd4: number;
+  oldTd2: number;
+  newTd4: number;
+  newTd2: number;
+  oldSd: number;
+  newSd: number;
+  holiday: number;
+  totalAttd: number;
+
+  // Line 2: Production/DRC
+  cls4?: number;
+  cls2?: number;
+  std4?: number;
+  std2?: number;
+  oldGwr?: number;
+  newGwr?: number;
+  cl4Rate?: number;
+  cl2Rate?: number;
+  scrapRate?: number;
   totalDrcKg: number;
   pieceRateAmount: number;
+  latex4?: number;
+  latex2?: number;
+  scrap4?: number;
+  scrap2?: number;
+  ldrc?: number;
+  sdrc?: number;
+
+  // Line 3: Incentives & Allowances
+  tdrc4?: number;
+  ldrc2?: number;
+  sdrc2?: number;
+  tdrc2?: number;
+  ldrc4Pct?: number;
+  ldrc2Pct?: number;
+  sdrc4Pct?: number;
+  sdrc2Pct?: number;
+  tov4?: number;
+  tov2?: number;
   incentiveAmount: number;
+  gwPay?: number;
+  tpgPay?: number;
+  hlPay?: number;
+  sikPay?: number;
+  cutInc?: number;
+  wAllo?: number;
+
+  // Line 4: Statutory Deductions & Totals
+  ifa?: number;
+  lcc?: number;
+  sltr?: number;
+  extraTree?: number;
+  interimRelief?: number;
   grossWage: number;
-  pfDeduction: number;
-  esiDeduction: number;
-  advanceDeduction: number;
+  bonusEarnings?: number;
+  epf: number;
+  lic: number;
+  iwf: number;
+  wageAdv?: number;
+  pTax?: number;
+  festAdv?: number;
+  exRec?: number;
+
+  // Line 5: External Deductions
+  trwLoan: number;
+  trwSuerty: number;
+  hba: number;
+  medicalLoan: number;
+  medAdv: number;
+  penalty: number;
+  banana: number;
+  kseb: number;
+  achankovil: number;
+  gpais: number;
+  amAdv: number;
+  coconut: number;
+  stamp: number;
+  excessPaid: number;
+
+  totalDeduction: number;
   netWage: number;
-  isExtraVoucher?: boolean; // Extra days beyond max → separate voucher, no PF/ESI
+  isExtraVoucher?: boolean;
 }
 
 // ─── Leave ──────────────────────────────────────────────────────────
