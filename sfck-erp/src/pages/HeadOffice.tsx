@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useERPStore } from '../store/useERPStore';
 import { ESTATES } from '../data/constants';
 import {
-  MapPin, Users, TrendingUp, IndianRupee,
+  Users, TrendingUp, IndianRupee,
   ChevronRight, Droplets, Archive
 } from 'lucide-react';
 import type { EstateId } from '../types';

@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CheckSquare, Droplets, Package,
   IndianRupee, Users, ClipboardList, ArrowLeftRight, LogOut,
-  Search, Bell, X, BarChart3, GitCompareArrows, Building2
+  Search, Bell, X, BarChart3, GitCompareArrows
 } from 'lucide-react';
 import { useERPStore } from '../../store/useERPStore';
 import { ESTATES } from '../../data/constants';

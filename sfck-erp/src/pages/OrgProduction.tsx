@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { DataTable } from '../components/ui/DataTable';
 import { useERPStore } from '../store/useERPStore';
 import { ESTATES } from '../data/constants';
-import { ArrowLeft, TrendingUp } from 'lucide-react';
+
 
 export const OrgProduction = () => {
-  const navigate = useNavigate();
+
   const { production, selectedMonth } = useERPStore();
 
   const summary = useMemo(() => {

@@ -47,7 +47,7 @@ const DataTableComponent = <T,>({ columns, data, searchable, onRowClick, rowPadd
             value={globalFilter ?? ''}
             onChange={e => setGlobalFilter(e.target.value)}
             placeholder="Search records..."
-            className="w-full max-w-[280px] !bg-gray-50 !text-[13px]"
+            className="w-full max-w-[280px] bg-gray-50! text-[13px]!"
           />
         </div>
       )}
@@ -66,8 +66,8 @@ const DataTableComponent = <T,>({ columns, data, searchable, onRowClick, rowPadd
           </thead>
           <tbody>
             {table.getRowModel().rows.map(row => (
-              <tr 
-                key={row.id} 
+              <tr
+                key={row.id}
                 className={`border-b border-gray-100 transition-colors ${onRowClick ? 'cursor-pointer hover:bg-gray-50' : 'hover:bg-gray-50'}`}
                 onClick={() => onRowClick && onRowClick(row.original)}
               >
@@ -88,7 +88,7 @@ const DataTableComponent = <T,>({ columns, data, searchable, onRowClick, rowPadd
           </tbody>
         </table>
       </div>
-      
+
       {table.getPageCount() > 1 && (
         <div className="border-t border-gray-100 px-4 py-2.5 flex justify-between items-center">
           <span className="text-xs text-gray-400">

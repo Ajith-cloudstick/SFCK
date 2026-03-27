@@ -26,7 +26,7 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, title, children }) 
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm flex items-start justify-center pt-[8vh]"
+      className="fixed inset-0 z-100 bg-black/30 backdrop-blur-sm flex items-start justify-center pt-[8vh]"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div ref={modalRef} className="bg-white rounded-xl w-full max-w-[520px] shadow-lg flex flex-col" role="dialog" aria-modal="true">

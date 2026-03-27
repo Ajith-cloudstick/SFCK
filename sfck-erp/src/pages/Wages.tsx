@@ -3,10 +3,8 @@ import { PageHeader } from '../components/layout/PageHeader';
 import { ExportButton } from '../components/ui/ExportButton';
 import { TabBar } from '../components/ui/TabBar';
 import { DataTable } from '../components/ui/DataTable';
-import { StatCard } from '../components/ui/StatCard';
 import { useERPStore } from '../store/useERPStore';
 import { ESTATES } from '../data/constants';
-import { Wallet, Landmark, Users, Receipt } from 'lucide-react';
 
 export const Wages = () => {
   const [activeTab, setActiveTab] = useState('Wage Inputs');
