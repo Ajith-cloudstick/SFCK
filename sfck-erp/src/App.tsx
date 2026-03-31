@@ -20,6 +20,7 @@ import { Assignments } from './pages/Assignments';
 import { MonthlyReport } from './pages/MonthlyReport';
 import { YearlyComparison } from './pages/YearlyComparison';
 import { EmployeeDetail } from './pages/EmployeeDetail';
+import Blocks from './pages/Blocks';
 
 function App() {
   const initData = useERPStore((state) => state.initData);
@@ -48,6 +49,7 @@ function App() {
           <Route path="/employees" element={<Employees />} />
           <Route path="/employees/:id" element={<EmployeeDetail />} />
           <Route path="/assignments" element={<Assignments />} />
+          <Route path="/blocks" element={<Blocks />} />
           <Route path="/monthly-report" element={<MonthlyReport />} />
           <Route path="/yearly-comparison" element={<YearlyComparison />} />
 

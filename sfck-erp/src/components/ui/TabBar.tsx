@@ -1,6 +1,6 @@
 export const TabBar = ({ tabs, active, onChange }: { tabs: string[]; active: string; onChange: (tab: string) => void }) => {
   return (
-    <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1">
+    <div className="flex gap-1 mb-2 bg-gray-100 rounded-lg p-1">
       {tabs.map(tab => (
         <span
           key={tab}

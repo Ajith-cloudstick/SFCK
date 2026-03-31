@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CheckSquare, Droplets, Package,
   IndianRupee, Users, ClipboardList, ArrowLeftRight, LogOut,
-  Search, Bell, X, BarChart3, GitCompareArrows
+  Search, Bell, X, BarChart3, GitCompareArrows, Layers
 } from 'lucide-react';
 import { useERPStore } from '../../store/useERPStore';
 import { ESTATES } from '../../data/constants';
@@ -58,6 +58,7 @@ export const Sidebar = () => {
       items: [
         { name: 'Wages', path: '/wages', icon: <IndianRupee size={18} /> },
         { name: 'Employees', path: '/employees', icon: <Users size={18} /> },
+        { name: 'Block Register', path: '/blocks', icon: <Layers size={18} /> },
         { name: 'Assignments', path: '/assignments', icon: <ClipboardList size={18} /> },
       ]
     }
@@ -157,7 +158,7 @@ export const Sidebar = () => {
                     to={item.path}
                     className={({ isActive }) =>
                       `flex items-center gap-2.5 px-2.5 py-2 rounded-md text-[13px] no-underline mb-0.5 transition-all ${isActive
-                        ? 'font-semibold text-primary-700 bg-primary-50 border border-primary-50'
+                        ? 'font-semibold text-white! bg-primary-500 border border-primary-50'
                         : 'font-normal text-gray-600 hover:bg-gray-100'
                       }`
                     }

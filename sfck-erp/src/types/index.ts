@@ -107,7 +107,7 @@ export type WageRecord = {
   empId: number;
   estate: EstateId;
   daysPresent: number;
-  
+
   // Line 1: Basic Inputs
   basic: number;
   oldDa: number;
@@ -228,4 +228,37 @@ export type Division = {
   name: string;
   estateId: EstateId;
   supervisorId?: number;
+}
+
+// ─── Blocks & Plantation ──────────────────────────────────────────
+export type BlockStatus = 'active' | 'replanting_due' | 'replanting_in_progress' | 'rested';
+
+export interface Block {
+  id: string;
+  blockNo: number;
+  estateId: EstateId;
+  division: string;
+  areaHa: number;
+  variety: string;
+  plantingDate: string;       // 'YYYY-MM-DD'
+  replantingDate?: string;    // 'YYYY-MM-DD'
+  replantingVariety?: string;
+  openingTreeCount: number;
+  currentTreeCount: number;
+  tappingTreeCount: number;
+  tappingSystem: string;      // e.g. 'S/2 D/2'
+  status: BlockStatus;
+  notes?: string;
+}
+
+export interface TreeMovement {
+  id: string;
+  blockId: string;
+  year: number;
+  openingCount: number;
+  treesLost: number;
+  lossReason: string;
+  treesAdded: number;
+  closingCount: number;
+  remarks: string;
 }

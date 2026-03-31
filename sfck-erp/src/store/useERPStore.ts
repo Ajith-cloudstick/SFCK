@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { format } from 'date-fns';
 import type { 
   Employee, AttendanceRecord, ProductionRecord, StockRecord, 
-  WageRecord, WorkAssignment, EstateId 
+  WageRecord, WorkAssignment, EstateId, Block, TreeMovement 
 } from '../types';
 import { generateAllData } from '../data/generateData';
 
@@ -13,6 +13,8 @@ interface ERPState {
   stock: StockRecord[];
   wages: WageRecord[];
   assignments: WorkAssignment[];
+  blocks: Block[];
+  treeMovements: TreeMovement[];
   selectedEstate: EstateId | null;
   selectedCC: number | 'all';
   selectedMonth: string;
@@ -23,6 +25,9 @@ interface ERPState {
   setSelectedMonth: (m: string) => void;
   setSelectedDate: (d: string) => void;
   updateAttendance: (date: string, empId: number, updates: Partial<AttendanceRecord>) => void;
+  addBlock: (block: Omit<Block, 'id'>) => void;
+  updateBlock: (id: string, updates: Partial<Block>) => void;
+  addTreeMovement: (movement: TreeMovement) => void;
 }
 
 export const useERPStore = create<ERPState>((set) => ({
@@ -32,6 +37,8 @@ export const useERPStore = create<ERPState>((set) => ({
   stock: [],
   wages: [],
   assignments: [],
+  blocks: [],
+  treeMovements: [],
   selectedEstate: null,
   selectedCC: 'all',
   selectedMonth: format(new Date(), 'yyyy-MM'),
@@ -50,6 +57,21 @@ export const useERPStore = create<ERPState>((set) => ({
       (rec.date === date && rec.empId === empId) 
         ? { ...rec, ...updates } 
         : rec
+    )
+  })),
+  addBlock: (block) => set((state) => ({
+    blocks: [{ ...block, id: `BLK-${Date.now()}` }, ...state.blocks]
+  })),
+  updateBlock: (id, updates) => set((state) => ({
+    blocks: state.blocks.map((b) => b.id === id ? { ...b, ...updates } : b)
+  })),
+  addTreeMovement: (movement) => set((state) => ({
+    treeMovements: [movement, ...state.treeMovements],
+    // Also update the block's currentTreeCount if needed
+    blocks: state.blocks.map((b) => 
+      b.id === movement.blockId 
+        ? { ...b, currentTreeCount: movement.closingCount } 
+        : b
     )
   }))
 }));

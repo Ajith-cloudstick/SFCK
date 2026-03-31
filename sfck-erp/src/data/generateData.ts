@@ -6,7 +6,8 @@ import {
 } from './constants';
 import type {
   Employee, AttendanceRecord, ProductionRecord, StockRecord,
-  WageRecord, WorkAssignment, EstateId, WorkerCategory, TapperClass
+  WageRecord, WorkAssignment, EstateId, WorkerCategory, TapperClass,
+  Block, TreeMovement, BlockStatus
 } from '../types';
 
 // ─── Helpers ────────────────────────────────────────────────────────
@@ -404,6 +405,93 @@ const generateAssignments = (employees: Employee[], dates: Date[]): WorkAssignme
   return records;
 };
 
+// ─── Blocks ────────────────────────────────────────────────────────
+const generateBlocks = (estates: typeof ESTATES): Block[] => {
+  const blocks: Block[] = [];
+  const REPLANTING_VARIETIES = ['RRII 414', 'RRII 417', 'RRII 429'];
+
+  estates.forEach(estate => {
+    const numBlocks = randomInt(20, 28);
+    let restedCount = 0;
+
+    for (let i = 1; i <= numBlocks; i++) {
+      const plantingYear = randomInt(1992, 2018);
+      const plantingDate = `${plantingYear}-06-01`;
+      let status: BlockStatus = 'active';
+      let replantingDate: string | undefined;
+      let replantingVariety: string | undefined;
+
+      if (plantingYear <= 1995) {
+        status = 'replanting_in_progress';
+        replantingDate = `2024-${randomInt(1, 12).toString().padStart(2, '0')}-15`;
+        replantingVariety = randomChoice(REPLANTING_VARIETIES);
+      } else if (plantingYear <= 1998) {
+        status = 'replanting_due';
+        replantingDate = `${randomChoice([2025, 2026])}-${randomInt(1, 12).toString().padStart(2, '0')}-01`;
+      } else if (restedCount === 0) {
+        status = 'rested';
+        restedCount++;
+      }
+
+      const openingTreeCount = randomInt(280, 450);
+      const currentTreeCount = openingTreeCount - randomInt(10, 40);
+      const tappingTreeCount = Math.floor(currentTreeCount * randomFloat(0.85, 0.95));
+
+      blocks.push({
+        id: `BLK-${estate.id}-${i}`,
+        blockNo: i,
+        estateId: estate.id,
+        division: randomChoice(['A', 'B', 'C', 'D']),
+        areaHa: Number(randomFloat(1.8, 4.5).toFixed(1)),
+        variety: randomChoice(['RRII 105', 'RRIM 600', 'GT 1', 'PB 260', 'PB 311', 'RRII 430']),
+        plantingDate,
+        replantingDate,
+        replantingVariety,
+        openingTreeCount,
+        currentTreeCount,
+        tappingTreeCount,
+        tappingSystem: randomChoice(['S/2 D/2', 'S/2 D/3', 'S/4 D/2']),
+        status,
+        notes: status === 'rested' ? 'Block under resting period for panel recuperation.' : undefined
+      });
+    }
+  });
+  return blocks;
+};
+
+// ─── Tree Movements ─────────────────────────────────────────────────
+const generateTreeMovements = (blocks: Block[]): TreeMovement[] => {
+  const movements: TreeMovement[] = [];
+  const CURRENT_YEAR = 2024;
+  const LOSS_REASONS = ['Wind damage', 'Disease', 'Natural death', 'Panel dryness'];
+
+  blocks.forEach(block => {
+    const startYear = parseInt(block.plantingDate.split('-')[0]);
+    let currentCount = block.openingTreeCount;
+
+    for (let year = startYear; year <= CURRENT_YEAR; year++) {
+      const treesLost = randomInt(2, 6);
+      const openingCount = currentCount;
+      const closingCount = currentCount - treesLost;
+
+      movements.push({
+        id: `TM-${block.id}-${year}`,
+        blockId: block.id,
+        year,
+        openingCount,
+        treesLost,
+        lossReason: randomChoice(LOSS_REASONS),
+        treesAdded: 0,
+        closingCount,
+        remarks: year === startYear ? 'Initial planting' : `Annual census ${year}`
+      });
+
+      currentCount = closingCount;
+    }
+  });
+  return movements;
+};
+
 // ─── Main ───────────────────────────────────────────────────────────
 export const generateAllData = () => {
   const employees = generateEmployees();
@@ -416,5 +504,11 @@ export const generateAllData = () => {
   const wages = generateWages(employees, attendance);
   const assignments = generateAssignments(employees, dates);
 
-  return { employees, attendance, production, stock, wages, assignments };
+  const blocks = generateBlocks(ESTATES);
+  const treeMovements = generateTreeMovements(blocks);
+
+  return { 
+    employees, attendance, production, stock, wages, assignments,
+    blocks, treeMovements 
+  };
 };
