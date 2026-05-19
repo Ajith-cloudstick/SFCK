@@ -7,15 +7,15 @@ import { ArrowLeft, IndianRupee } from 'lucide-react';
 
 export const OrgWages = () => {
   const navigate = useNavigate();
-  const { wages, employees, selectedMonth } = useERPStore();
+  const { wages, selectedMonth } = useERPStore();
 
   const summary = useMemo(() => {
     const monthWages = wages.filter(w => w.month === selectedMonth);
     return ESTATES.map(estate => {
       const estWages = monthWages.filter(w => w.estate === estate.id);
       const gross = estWages.reduce((s, w) => s + w.grossWage, 0);
-      const pf = estWages.reduce((s, w) => s + w.pfDeduction, 0);
-      const esi = estWages.reduce((s, w) => s + w.esiDeduction, 0);
+      const pf = estWages.reduce((s, w) => s + w.epf, 0);
+      const esi = estWages.reduce((s, w) => s + w.iwf, 0);
       const net = estWages.reduce((s, w) => s + w.netWage, 0);
       const workers = estWages.length;
       return {

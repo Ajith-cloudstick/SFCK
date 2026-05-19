@@ -1,26 +1,14 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+
 import { format } from 'date-fns';
 import { useERPStore } from '../../store/useERPStore';
 import { Bell, Search } from 'lucide-react';
 
 export const TopBar: React.FC = () => {
-  const location = useLocation();
+
   const { selectedMonth, setSelectedMonth } = useERPStore();
 
-  const getPageTitle = () => {
-    switch (location.pathname) {
-      case '/dashboard': return 'Overview';
-      case '/attendance': return 'Attendance';
-      case '/production': return 'Production';
-      case '/stock': return 'Stock';
-      case '/wages': return 'Wages';
-      case '/employees': return 'Employees';
-      case '/assignments': return 'Assignments';
-      default: return 'SFCK ERP';
-    }
-  };
-
+ 
   return (
     <div style={{
       height: 'var(--header-height)',

@@ -8,8 +8,8 @@ export const EstateSelector: React.FC = () => {
 
   return (
     <select
-      value={selectedEstate}
-      onChange={e => setSelectedEstate(e.target.value === 'all' ? 'all' : Number(e.target.value) as EstateId)}
+      value={selectedEstate ?? 'all'}
+      onChange={e => setSelectedEstate(e.target.value === 'all' ? null : Number(e.target.value) as EstateId)}
       style={{
         border: '1px solid var(--gray-300)',
         borderRadius: 'var(--radius-sm)',

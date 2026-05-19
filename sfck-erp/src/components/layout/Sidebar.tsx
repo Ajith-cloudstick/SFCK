@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useERPStore } from '../../store/useERPStore';
 import { ESTATES } from '../../data/constants';
+import logo from '../../assets/logo.png'
 
 export const Sidebar = () => {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ export const Sidebar = () => {
         {/* Logo + action icons */}
         <div className="px-4 pt-8 pb-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
+            <img src={logo} alt="Logo" className="w-12 h-12" />
             <span className="text-3xl font-semibold text-primary-600">SFCK</span>
           </div>
           <div className="flex items-center gap-0.5">
